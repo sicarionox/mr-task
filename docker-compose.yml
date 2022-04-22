@@ -1,0 +1,57 @@
+version: '3.9'
+
+services:
+  mysql:
+    container_name: mr_task_database
+    image: bitnami/mariadb:latest
+    ports:
+      - "3306:3306"
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: mr_task_db
+      MARIADB_USER: user
+      MARIADB_PASSWORD: root
+    restart: on-failure
+    volumes:
+      - ./docker/mysql:/var/lib/mysql
+    networks:
+      - app-network
+
+  php-fpm:
+    container_name: mr_task_php
+    build:
+      context: .
+    depends_on:
+      - mysql
+    environment:
+      - APP_ENV=${APP_ENV}
+      - APP_SECRET=${APP_SECRET}
+    volumes:
+      - ./:/var/www
+      - ./docker/php-fpm/www.conf:/usr/local/etc/php-fpm.d/www.conf
+      - ./docker/php-fpm/local.ini:/usr/local/etc/php/conf.d/local.ini:cached
+    networks:
+      - app-network
+    restart: always
+
+  nginx:
+    container_name: mr_task_nginx
+    build:
+      context: docker/nginx
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker/nginx/sites/:/etc/nginx/sites-available
+      - ./docker/nginx/conf.d/:/etc/nginx/conf.d
+    depends_on:
+      - php-fpm
+    ports:
+      - "80:80"
+      - "9001:9001"
+    networks:
+      - app-network
+    restart: always
+
+networks:
+  app-network:
+    driver: bridge
