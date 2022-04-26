@@ -21,4 +21,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::controller(NewsSourceController::class)->group(function () {
     Route::get('/newsSources/index', 'index');
+    Route::post('/newsSources/create', 'store');
 });
