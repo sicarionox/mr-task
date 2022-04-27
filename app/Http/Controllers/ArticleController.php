@@ -23,7 +23,6 @@ class ArticleController extends Controller
 
     public function store(CreateArticleRequest $request): JsonResponse
     {
-
         $response = new JsonResponse();
         $validatedData = $request->validated();
         $newsSource = $this->newsSourceService->getById($validatedData['newsSourceId']);
