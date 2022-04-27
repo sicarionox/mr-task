@@ -23,7 +23,7 @@ class NewsSourceController extends Controller
     {
         $validatedData = $request->validated();
 
-        $newsSource = $this->service->saveNewsSource($validatedData);
+        $newsSource = $this->service->createNewsSource($validatedData);
 
         return new JsonResponse($newsSource->name, 200);
     }

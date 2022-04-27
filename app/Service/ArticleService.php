@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Factory\ArticleFactory;
 use App\Models\Article;
+use App\Models\NewsSource;
 use App\Repository\ArticleRepository;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -19,13 +20,17 @@ class ArticleService
         return $this->repository->getAll();
     }
 
-    public function createArticle(array $data): Article
+    public function createArticle(array $data, NewsSource $newsSource, bool $fromNewsSource = false): Article
     {
         $article = $this->factory->init();
 
         $article->title = $data['title'];
-//        $article->newsSource->save($newsSource);
-        $article->save();
+        $article->tags = implode(',', $data['tags']);
+        $newsSource->articles()->save($article);
+
+        if (!$fromNewsSource) {
+            logger('Article (id ' . $article->id . ') created');
+        }
 
         return $article;
     }

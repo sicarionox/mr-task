@@ -10,7 +10,7 @@ class Article extends Model
 {
     use HasFactory;
 
-    public function newsSources(): BelongsTo
+    public function newsSource(): BelongsTo
     {
         return $this->belongsTo(NewsSource::class);
     }
