@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NewsSourceController;
+use App\Http\Controllers\ArticleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,4 +23,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::controller(NewsSourceController::class)->group(function () {
     Route::get('/newsSources/index', 'index');
     Route::post('/newsSources/create', 'store');
+});
+
+
+Route::controller(ArticleController::class)->group(function () {
+    Route::get('/articles/index', 'index');
+    Route::post('/articles/create', 'store');
 });

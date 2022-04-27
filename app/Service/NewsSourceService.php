@@ -15,19 +15,27 @@ class NewsSourceService
         protected ArticleService $articleService
     ) {}
 
+    public function getById(int $id): ?NewsSource
+    {
+        return $this->repository->getById($id);
+    }
+
     public function getAllNewsSources(): LengthAwarePaginator
     {
         return $this->repository->getAll();
     }
 
-    public function saveNewsSource(array $data): NewsSource
+    public function createNewsSource(array $data): NewsSource
     {
         $newsSource = $this->factory->init();
         $newsSource->name = $data['name'];
         $newsSource->save();
 
         if (isset($data['article'])) {
-            $this->articleService->createArticle($data['article']);
+            $article = $this->articleService->createArticle($data['article'], $newsSource, true);
+            logger('News source (id ' . $newsSource->id . ') created with article (id ' . $article->id . ')');
+        } else {
+            logger('News source (id ' . $newsSource->id . ') created');
         }
 
         return $newsSource;

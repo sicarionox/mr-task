@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Enum\Tag;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 
 class CreateNewsSourceRequest extends FormRequest
 {
@@ -11,7 +13,9 @@ class CreateNewsSourceRequest extends FormRequest
         return [
             'name' => 'required|string',
             'article' => 'nullable|array',
-            'article.title' => 'required_with:article|string'
+            'article.title' => 'required_with:article|string',
+            'article.tags' => 'required_with:article|array',
+            'article.tags.*' => ['required', new Enum(Tag::class)]
         ];
     }
 }
