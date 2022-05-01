@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Events\ArticleCreatedEvent;
 use App\Factory\ArticleFactory;
 use App\Models\Article;
 use App\Models\NewsSource;
@@ -29,7 +30,7 @@ class ArticleService
         $newsSource->articles()->save($article);
 
         if (!$fromNewsSource) {
-            logger('Article (id ' . $article->id . ') created');
+            ArticleCreatedEvent::dispatch($article);
         }
 
         return $article;

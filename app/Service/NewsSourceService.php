@@ -2,6 +2,8 @@
 
 namespace App\Service;
 
+use App\Events\ArticleWithNewsSourceCreatedEvent;
+use App\Events\NewsSourceCreatedEvent;
 use App\Factory\NewsSourceFactory;
 use App\Models\NewsSource;
 use App\Repository\NewsSourceRepository;
@@ -33,9 +35,9 @@ class NewsSourceService
 
         if (isset($data['article'])) {
             $article = $this->articleService->createArticle($data['article'], $newsSource, true);
-            logger('News source (id ' . $newsSource->id . ') created with article (id ' . $article->id . ')');
+            ArticleWithNewsSourceCreatedEvent::dispatch($article, $newsSource);
         } else {
-            logger('News source (id ' . $newsSource->id . ') created');
+            NewsSourceCreatedEvent::dispatch($newsSource);
         }
 
         return $newsSource;

@@ -1,11 +1,16 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Events\ArticleCreatedEvent;
+use App\Events\ArticleWithNewsSourceCreatedEvent;
+use App\Events\NewsSourceCreatedEvent;
+use App\Listeners\SendArticleCreatedNotification;
+use App\Listeners\SendArticleWithNewsSourceCreatedNotification;
+use App\Listeners\SendNewsSourceCreatedNotification;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -18,6 +23,15 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        ArticleCreatedEvent::class => [
+            SendArticleCreatedNotification::class
+        ],
+        NewsSourceCreatedEvent::class => [
+            SendNewsSourceCreatedNotification::class
+        ],
+        ArticleWithNewsSourceCreatedEvent::class => [
+            SendArticleWithNewsSourceCreatedNotification::class
+        ]
     ];
 
     /**
